@@ -44,7 +44,7 @@
   </style>
 
   <!-- =======================
-       JavaScript：アプリ起動＆ストア誘導（iOS & Android安定版）
+       JavaScript：アプリ起動＆ストア誘導（iOS & Android Intent URL方式）
        ======================= -->
   <script>
     window.onload = function() {
@@ -52,7 +52,7 @@
       // -----------------------
       // ① バージョン番号（右下表示用）
       // -----------------------
-      var appVersion = "V09";
+      var appVersion = "V10";
 
       // -----------------------
       // ② iOS用アプリスキーム（起動用URL）
@@ -65,17 +65,17 @@
       var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
 
       // -----------------------
-      // ④ Android Google Play URL（バージョン不要）
+      // ④ Android PlayストアURL（バージョン不要）
       // -----------------------
       var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
 
       // -----------------------
       // ⑤ 右下バージョン表示を自動生成
       // -----------------------
-      var versionElem = document.createElement("div"); // 新しいdiv要素作成
-      versionElem.className = "version";              // CSSクラス設定
-      versionElem.textContent = "バージョン: " + appVersion; // テキスト設定
-      document.body.appendChild(versionElem);         // bodyに追加して表示
+      var versionElem = document.createElement("div");
+      versionElem.className = "version";                 // CSSクラス設定
+      versionElem.textContent = "バージョン: " + appVersion; // 表示文字列設定
+      document.body.appendChild(versionElem);            // bodyに追加して表示
 
       // -----------------------
       // ⑥ ユーザーエージェント取得
@@ -97,23 +97,18 @@
       }
 
       // =======================
-      // Android端末判定（安定版）
+      // Android端末判定（Intent URL方式）
       // =======================
       else if (/android/i.test(ua)) {
 
-        // Androidはカスタムスキーム＋タイムアウトでPlayストア誘導
-        var appURL_Android = "switchbot://"; // アプリスキーム
-        var start = Date.now();              // 開始時刻を取得
+        // Intent URLでアプリ起動
+        // Chromeではインストール済みならアプリ起動、未インストールならPlayストア誘導
+        var intentURL = "intent://#Intent;"
+                      + "scheme=switchbot;"                    // アプリスキーム
+                      + "package=com.theswitchbot.switchbot;" // パッケージ名
+                      + "end";                                 // Intent終了
 
-        // アプリ起動
-        window.location.href = appURL_Android;
-
-        // 2秒後にアプリが起動していなければPlayストアへ誘導
-        setTimeout(function() {
-          if (Date.now() - start < 2100) { // タイムアウト判定
-            window.location.href = storeURL_Android;
-          }
-        }, 2000);
+        window.location.href = intentURL;
       }
 
       // =======================
@@ -122,8 +117,7 @@
       else {
         // スマホ以外は案内メッセージ表示
         document.body.innerHTML = "<p class='message'>スマートフォンからアクセスしてください。</p>";
-        // バージョン表示も追加
-        document.body.appendChild(versionElem);
+        document.body.appendChild(versionElem); // バージョン表示も追加
       }
     }
   </script>
