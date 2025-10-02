@@ -25,26 +25,11 @@
 
     /* メインメッセージ */
     .message {
-      font-size: 20px;           /* 文字を少し大きくして強調 */
+      font-size: 22px;           /* 文字を少し大きくして強調 */
       font-weight: bold;
       color: #333;
       line-height: 1.5;          /* 行間 */
       margin: 0 20px;            /* 横余白でスマホ画面にフィット */
-    }
-
-    /* 完了ボタン */
-    button {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background-color: #007bff;
-      color: #fff;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
     }
 
     /* =======================
@@ -54,7 +39,7 @@
       position: fixed;           /* 画面に固定 */
       bottom: 10px;              /* 下から10px */
       right: 10px;               /* 右から10px */
-      font-size: 10px;           /* 小さめ文字 */
+      font-size: 12px;           /* 小さめ文字 */
       color: #666;
       text-align: right;         /* 右寄せ */
     }
@@ -67,7 +52,7 @@
     window.onload = function() {
 
       // ① バージョン番号を一括管理
-      var appVersion = "V05";
+      var appVersion = "V04.1";
 
       // ② アプリURLスキーム（キャッシュバスターとしてバージョン付与）
       var appURL = "switchbot://?v=" + appVersion;
@@ -125,12 +110,11 @@
 </head>
 <body>
   <!-- =======================
-       メインメッセージ
+       メインメッセージ（中央表示）
        ======================= -->
   <p class="message">
     SwitchBotアプリを起動しました。<br><br>
-    完了したらこの画面を閉じてください。<br>
-    <button onclick="window.close()">完了</button>
+    完了したらこの画面を閉じてください。
   </p>
 
   <!-- =======================
