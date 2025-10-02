@@ -30,7 +30,7 @@
     small {
       display: block;           /* 改行して下に表示 */
       margin-top: 10px;
-      font-size: 14px;          /* バージョン文字小さめ */
+      font-size: 12px;          /* バージョン文字小さめ */
       color: #666;
     }
   </style>
@@ -44,7 +44,7 @@
 
       // ① バージョン番号をここだけで管理
       //    HTML表示とURLキャッシュバスターに自動反映されます
-      var appVersion = "V04";
+      var appVersion = "V04.1";
 
       // ② ユーザーエージェント取得（端末判定用）
       var ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -96,7 +96,7 @@
        ======================= -->
   <p>
     SwitchBotアプリを起動しました。<br><br>
-    完了したらこのタブを閉じてください。<br><br>
+    完了したらこの画面を閉じてください。<br><br><br><br>
     <small id="version"></small> <!-- ここにJSでバージョンが入る -->
   </p>
 </body>
