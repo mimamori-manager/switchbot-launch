@@ -5,73 +5,99 @@
   <title>SwitchBot起動</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- スタイル設定 -->
+  <!-- =======================
+       CSS：中央配置・文字スタイル
+       ======================= -->
   <style>
     html, body {
-      height: 100%;           /* 画面全体を使用 */
-      margin: 0;              /* デフォルト余白を削除 */
+      height: 100%;             /* 画面全体を使用 */
+      margin: 0;                /* デフォルト余白を削除 */
       padding: 0;
-      display: flex;          /* フレックスボックスで中央配置 */
-      justify-content: center; /* 水平方向中央 */
-      align-items: center;    /* 垂直方向中央 */
-      font-family: Arial, sans-serif; /* フォント指定 */
-      text-align: center;     /* テキスト中央揃え */
+      display: flex;            /* フレックスボックスで中央配置 */
+      justify-content: center;   /* 水平方向中央 */
+      align-items: center;      /* 垂直方向中央 */
+      font-family: Arial, sans-serif;
+      text-align: center;
       background-color: #f8f8f8; /* 背景色 */
     }
     p {
-      font-size: 18px;        /* 文字サイズ */
-      color: #333;            /* 文字色 */
-      line-height: 1.5;       /* 行間 */
+      font-size: 32px;          /* 大きめ文字 */
+      font-weight: bold;        /* 太字 */
+      color: #333;
+      line-height: 1.5;         /* 行間 */
+      margin: 0 20px;           /* 横余白でスマホ画面にフィット */
+    }
+    small {
+      display: block;           /* 改行して下に表示 */
+      margin-top: 10px;
+      font-size: 16px;          /* バージョン文字小さめ */
+      color: #666;
     }
   </style>
 
-  <!-- JavaScriptでアプリ起動＆ストア誘導 -->
+  <!-- =======================
+       JavaScript：アプリ起動＆キャッシュバスター
+       バージョンを一括管理
+       ======================= -->
   <script>
     window.onload = function() {
-      // ユーザーエージェントを取得
+
+      // ① バージョン番号をここだけで管理
+      //    HTML表示とURLキャッシュバスターに自動反映されます
+      var appVersion = "V03";
+
+      // ② ユーザーエージェント取得（端末判定用）
       var ua = navigator.userAgent || navigator.vendor || window.opera;
 
-      // 共通アプリスキーム
-      var appURL = "switchbot://";
+      // ③ アプリURL（キャッシュバスターとしてバージョンを付与）
+      var appURL = "switchbot://?v=" + appVersion;
 
-      // iOS App Store URL
-      var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
+      // ④ iOS App Store URL（キャッシュバスターとしてバージョン付与）
+      var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761?v=" + appVersion;
 
-      // Android Google Play URL
-      var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
+      // ⑤ Android Google Play URL（キャッシュバスターとしてバージョン付与）
+      var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot&v=" + appVersion;
 
-      // iOS端末判定
+      // ⑥ iOS端末判定
       if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-        // まずアプリを起動
+        // アプリを起動
         window.location.href = appURL;
 
-        // 2秒後にアプリが無ければApp Storeへ誘導
-        setTimeout(function(){
-          window.location.href = storeURL_iOS;
-        }, 2000);
+        // アプリ未インストール時は2秒後にApp Storeに誘導
+        setTimeout(function(){ window.location.href = storeURL_iOS; }, 2000);
       }
-      // Android端末判定
+      // ⑦ Android端末判定
       else if (/android/i.test(ua)) {
-        // まずアプリを起動
+        // アプリを起動
         window.location.href = appURL;
 
-        // 2秒後にアプリが無ければGoogle Playへ誘導
-        setTimeout(function(){
-          window.location.href = storeURL_Android;
-        }, 2000);
+        // アプリ未インストール時は2秒後にGoogle Playに誘導
+        setTimeout(function(){ window.location.href = storeURL_Android; }, 2000);
       }
-      // その他（PCやタブレットなど）
+      // ⑧ その他（PCやタブレットなど）
       else {
+        // 案内メッセージを表示
         document.body.innerHTML = "<p>スマートフォンからアクセスしてください。</p>";
+      }
+
+      // ⑨ HTML内の <small> にバージョン番号を自動反映
+      //     <small id="version"></small> を事前にHTMLに置く必要があります
+      var versionElem = document.getElementById("version");
+      if(versionElem) {
+        versionElem.textContent = "バージョン: " + appVersion;
       }
     }
   </script>
 </head>
 <body>
-  <!-- ユーザーへの案内メッセージ -->
+  <!-- =======================
+       ユーザーへの案内メッセージ
+       バージョンはJSで自動反映
+       ======================= -->
   <p>
     SwitchBotアプリを起動しました。<br><br>
     完了したらこのタブを閉じてください。
+    <small id="version"></small> <!-- ここにJSでバージョンが入る -->
   </p>
 </body>
 </html>
