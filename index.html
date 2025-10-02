@@ -6,71 +6,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- =======================
-       CSS：中央配置・文字スタイル + 右下バージョン表示
+       CSS：中央配置 + 文字スタイル + バージョン表示
        ======================= -->
   <style>
     html, body {
-      height: 100%;                  /* 画面全体を使用 */
-      margin: 0;                     /* デフォルト余白削除 */
+      height: 100%;                  
+      margin: 0;                     
       padding: 0;
       font-family: Arial, sans-serif;
       text-align: center;
       background-color: #f8f8f8;
       display: flex;
       flex-direction: column;
-      justify-content: center;       /* 垂直方向中央配置 */
-      align-items: center;           /* 水平方向中央配置 */
+      justify-content: center;       
+      align-items: center;           
     }
 
     /* メインメッセージ */
     .message {
-      font-size: 20px;
+      font-size: 20px;               
       font-weight: bold;
       color: #333;
       line-height: 1.5;
       margin: 0 20px;
-      max-width: 90%;                /* スマホでも読みやすく幅制限 */
-    }
-
-    /* Android用アプリ起動ボタン */
-    .btn-launch {
-      margin-top: 20px;
-      padding: 12px 24px;
-      font-size: 18px;
-      color: #fff;
-      background-color: #007AFF;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    .btn-launch:hover {
-      background-color: #005BBB;
+      max-width: 90%;                
     }
 
     /* 右下バージョン表示 */
     .version {
-      position: fixed;
+      position: fixed;               
       bottom: 10px;
       right: 10px;
       font-size: 11px;
       color: #666;
       text-align: right;
-    }
-
-    /* ストアリンク */
-    .store-link {
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .store-link a {
-      color: #007AFF;
-      text-decoration: none;
-    }
-
-    .store-link a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
@@ -80,20 +49,8 @@
        メインメッセージ
        ======================= -->
   <p class="message">
-    SwitchBotアプリを起動してください。<br>
+    SwitchBotアプリを起動しました。<br>
     完了したらこの画面を閉じてください。
-  </p>
-
-  <!-- =======================
-       Android用アプリ起動ボタン
-       ======================= -->
-  <button class="btn-launch" id="launchBtn">アプリを開く</button>
-
-  <!-- =======================
-       ストアリンク（未インストール時用）
-       ======================= -->
-  <p class="store-link">
-    アプリが開かない場合は <a id="storeLink" href="#">こちらからインストール</a>
   </p>
 
   <!-- =======================
@@ -102,28 +59,27 @@
   <div class="version" id="version"></div>
 
   <!-- =======================
-       JavaScript：iOS自動起動 / Androidボタン型 + 自動ストア誘導
+       JavaScript：iOS自動起動 / Androidはストア自動起動
        ======================= -->
   <script>
     // -----------------------
-    // ① バージョン番号
+    // ① HTMLバージョン番号
     // -----------------------
-    var appVersion = "V12";
+    var appVersion = "V14"; // このHTMLのバージョン管理
 
     // -----------------------
-    // ② iOS用スキーム＆App Store URL
+    // ② iOSスキーム＆App Store URL
     // -----------------------
-    var appURL_iOS = "switchbot://?v=" + appVersion;
-    var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
+    var appURL_iOS = "switchbot://?v=" + appVersion; // iOSアプリスキーム
+    var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761"; // iOS App Store
 
     // -----------------------
-    // ③ Android用スキーム＆PlayストアURL
+    // ③ Androidは直接Google PlayストアURL
     // -----------------------
-    var appURL_Android = "switchbot://";
     var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
 
     // -----------------------
-    // ④ 右下バージョン表示
+    // ④ 右下バージョン表示を反映
     // -----------------------
     var versionElem = document.getElementById("version");
     versionElem.textContent = "バージョン: " + appVersion;
@@ -132,58 +88,37 @@
     // ⑤ ユーザーエージェント判定
     // -----------------------
     var ua = navigator.userAgent || navigator.vendor || window.opera;
-    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-    var isAndroid = /android/i.test(ua);
+    var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream; // iOS判定
+    var isAndroid = /android/i.test(ua);                          // Android判定
 
     // =======================
     // iOS自動起動処理（従来通り）
     // =======================
     if (isIOS) {
-      // アプリ起動
+      // ① アプリスキームで起動
       window.location.href = appURL_iOS;
 
-      // 2秒後にApp Store誘導（未インストール時）
+      // ② 2秒後にApp Storeへ誘導（未インストールの場合の保険）
       setTimeout(function() {
         window.location.href = storeURL_iOS;
       }, 2000);
     }
 
     // =======================
-    // Androidユーザー操作型 + 自動ストア誘導
+    // Android自動ストア起動（ボタンなし）
     // =======================
     if (isAndroid) {
-      var launchBtn = document.getElementById("launchBtn");
-      launchBtn.addEventListener("click", function() {
-        // スキームでアプリを起動
-        window.location.href = appURL_Android;
-
-        // ストアリンクも更新（手動でのアクセス用）
-        document.getElementById("storeLink").href = storeURL_Android;
-
-        // -----------------------
-        // ⑥ ボタン押下後、5秒経過で自動的にPlayストアへ誘導
-        // -----------------------
-        setTimeout(function() {
-          window.location.href = storeURL_Android;
-        }, 5000); // 5000ms = 5秒
-      });
-    } else {
-      // Android以外はボタン非表示
-      document.getElementById("launchBtn").style.display = "none";
+      // Androidはスキーム起動を使わず、直接Playストアを開く
+      window.location.href = storeURL_Android;
     }
 
-    // -----------------------
-    // ⑦ ストアリンク初期設定
-    // -----------------------
-    var storeLink = document.getElementById("storeLink");
-    if (isIOS) {
-      storeLink.href = storeURL_iOS;
-    } else if (isAndroid) {
-      storeLink.href = storeURL_Android;
-    } else {
-      storeLink.href = "#";
+    // =======================
+    // PCや非スマホ端末向け表示
+    // =======================
+    if (!isIOS && !isAndroid) {
+      // スマホ以外では案内メッセージを表示
+      document.body.innerHTML = "<p class='message'>スマートフォンからアクセスしてください。</p>";
     }
-
   </script>
 </body>
 </html>
