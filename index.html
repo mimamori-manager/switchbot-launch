@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SwitchBot起動</title>
+  <script>
+    window.onload = function() {
+      // ユーザーエージェントを取得
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+
+      // URLを初期化
+      var appURL = "switchbot://"; // 共通でアプリ起動
+
+      // iOSの場合はApp Store
+      var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
+
+      // Androidの場合はGoogle Play
+      var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
+
+      // iOS判定
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+        // まずアプリを起動
+        window.location.href = appURL;
+        // 2秒後にアプリがなければApp Store
+        setTimeout(function() {
+          window.location.href = storeURL_iOS;
+        }, 2000);
+      }
+      // Android判定
+      else if (/android/i.test(ua)) {
+        window.location.href = appURL;
+        setTimeout(function() {
+          window.location.href = storeURL_Android;
+        }, 2000);
+      }
+      // その他（PCなど）
+      else {
+        document.body.innerHTML = "<p>スマートフォンからアクセスしてください。</p>";
+      }
+    }
+  </script>
+</head>
+<body>
+  <p>SwitchBotアプリを起動しています…</p>
+</body>
+</html>
+
