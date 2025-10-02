@@ -9,7 +9,7 @@
        CSS：中央配置・文字スタイル + 右下バージョン表示
        ======================= -->
   <style>
-    /* 基本設定：画面全体を使用し、中央配置 */
+    /* 基本設定：画面全体を使用し中央配置 */
     html, body {
       height: 100%;               /* 画面全体を使用 */
       margin: 0;                  /* デフォルト余白を削除 */
@@ -18,30 +18,28 @@
       text-align: center;
       background-color: #f8f8f8;
       display: flex;
-      flex-direction: column;     /* 上下方向に要素を配置 */
+      flex-direction: column;
       justify-content: center;    /* メインコンテンツを垂直中央に配置 */
       align-items: center;        /* 水平方向中央 */
     }
 
     /* メインメッセージ */
     .message {
-      font-size: 20px;           /* 文字を少し大きくして強調 */
+      font-size: 20px;           /* 本文文字サイズ 20px */
       font-weight: bold;
       color: #333;
-      line-height: 1.5;          /* 行間 */
-      margin: 0 20px;            /* 横余白でスマホ画面にフィット */
+      line-height: 1.5;
+      margin: 0 20px;
     }
 
-    /* =======================
-         バージョン表示：右下に固定
-         ======================= */
+    /* バージョン表示：右下固定 */
     .version {
       position: fixed;           /* 画面に固定 */
       bottom: 10px;              /* 下から10px */
       right: 10px;               /* 右から10px */
-      font-size: 10px;           /* 小さめ文字 */
+      font-size: 11px;           /* バージョン文字サイズ 11px */
       color: #666;
-      text-align: right;         /* 右寄せ */
+      text-align: right;
     }
   </style>
 
@@ -52,28 +50,125 @@
     window.onload = function() {
 
       // ① バージョン番号を一括管理
-      var appVersion = "V06";
+      var appVersion = "V07";
 
-      // ② アプリURLスキーム（キャッシュバスターとしてバージョン付与）
+      // ② アプリURLスキーム（iOS用）
       var appURL = "switchbot://?v=" + appVersion;
 
-      // ③ iOS App Store URL（キャッシュバスター付与）
+      // ③ iOS App Store URL
       var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761?v=" + appVersion;
 
-      // ④ Android Google Play URL（キャッシュバスター付与）
+      // ④ Android Google Play URL
       var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot&v=" + appVersion;
 
-      // ⑤ ユーザーエージェント取得（端末判定用）
+      // ⑤ ユーザーエージェント取得
       var ua = navigator.userAgent || navigator.vendor || window.opera;
 
       // =======================
       // iOS端末判定
       // =======================
       if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-        // アプリを起動（インストール済みなら即起動）
+        // インストール済みならアプリ起動
         window.location.href = appURL;
 
-        // 2秒後にApp Storeに誘導（未インストール時のフォールバック）
+        // 2秒後にApp Storeに誘導（未インストール時）
+        setTimeout(function(){
+          window.location.href = storeURL_iOS;
+        }, 2000);
+      }<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SwitchBot起動</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- =======================
+       CSS：中央配置・文字スタイル + 右下バージョン表示
+       ======================= -->
+  <style>
+    /* 画面全体を使い中央配置 */
+    html, body {
+      height: 100%;               /* 画面全体を使用 */
+      margin: 0;                  /* デフォルト余白を削除 */
+      padding: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f8f8f8;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;    /* 垂直中央 */
+      align-items: center;        /* 水平中央 */
+    }
+
+    /* メインメッセージ */
+    .message {
+      font-size: 20px;            /* 文字サイズ 20px */
+      font-weight: bold;
+      color: #333;
+      line-height: 1.5;
+      margin: 0 20px;
+      max-width: 90%;             /* スマホでも読みやすく幅を制限 */
+    }
+
+    /* 右下バージョン表示 */
+    .version {
+      position: fixed;            /* 画面に固定 */
+      bottom: 10px;               /* 下から10px */
+      right: 10px;                /* 右から10px */
+      font-size: 11px;            /* 文字サイズ 11px */
+      color: #666;
+      text-align: right;
+    }
+  </style>
+
+  <!-- =======================
+       JavaScript：アプリ起動＆ストア誘導
+       ======================= -->
+  <script>
+    window.onload = function() {
+
+      // -----------------------
+      // ① バージョン番号を一括管理（HTML自動表示用）
+      // -----------------------
+      var appVersion = "V08";
+
+      // -----------------------
+      // ② iOS用アプリスキーム
+      // -----------------------
+      var appURL = "switchbot://?v=" + appVersion;
+
+      // -----------------------
+      // ③ iOS App Store URL（バージョンパラメータ不要）
+      // -----------------------
+      var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
+
+      // -----------------------
+      // ④ Android Google Play URL（バージョンパラメータ不要）
+      // -----------------------
+      var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
+
+      // -----------------------
+      // ⑤ 右下バージョン表示を自動生成
+      // -----------------------
+      var versionElem = document.createElement("div"); // 新しいdiv要素を作成
+      versionElem.className = "version";              // CSSクラスを設定
+      versionElem.textContent = "バージョン: " + appVersion; // テキスト内容を設定
+      document.body.appendChild(versionElem);         // bodyに追加して画面に表示
+
+      // -----------------------
+      // ⑥ ユーザーエージェントを取得して端末判定
+      // -----------------------
+      var ua = navigator.userAgent || navigator.vendor || window.opera;
+
+      // =======================
+      // iOS端末判定
+      // =======================
+      if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+
+        // アプリを起動
+        window.location.href = appURL;
+
+        // 2秒後にApp Storeへ誘導（未インストール時）
         setTimeout(function(){
           window.location.href = storeURL_iOS;
         }, 2000);
@@ -83,11 +178,49 @@
       // Android端末判定
       // =======================
       else if (/android/i.test(ua)) {
-        // Intentスキームを使用すると
-        // 1) アプリがインストール済みなら直接起動
-        // 2) 未インストールならGoogle Playに誘導
-        var intentURL = "intent://#Intent;scheme=switchbot;package=com.theswitchbot.switchbot;S.browser_fallback_url=" 
-                        + encodeURIComponent(storeURL_Android) + ";end";
+
+        // Intent URLでアプリ起動 + 未インストール時はPlayストアへ誘導
+        var intentURL = "intent://#Intent;"
+                      + "scheme=switchbot;"                      // アプリスキーム
+                      + "package=com.theswitchbot.switchbot;"   // パッケージ名
+                      + "S.browser_fallback_url=" + encodeURIComponent(storeURL_Android) // 未インストール時のフォールバックURL
+                      + ";end";
+        window.location.href = intentURL;
+      }
+
+      // =======================
+      // その他端末（PCなど）
+      // =======================
+      else {
+        // PCなどスマホ以外は案内メッセージを表示
+        document.body.innerHTML = "<p class='message'>スマートフォンからアクセスしてください。</p>";
+        // バージョン表示も追加
+        document.body.appendChild(versionElem);
+      }
+    }
+  </script>
+</head>
+<body>
+  <!-- =======================
+       メインメッセージ（中央表示）
+       ======================= -->
+  <p class="message">
+    SwitchBotアプリを起動しました。<br><br>
+    完了したらこの画面を閉じてください。
+  </p>
+</body>
+</html>
+
+      // =======================
+      // Android端末判定
+      // =======================
+      else if (/android/i.test(ua)) {
+        // Intent URLでアプリ起動
+        var intentURL = "intent://#Intent;"
+                      + "scheme=switchbot;"                  // アプリスキーム
+                      + "package=com.theswitchbot.switchbot;" // パッケージ名
+                      + "S.browser_fallback_url=" + encodeURIComponent(storeURL_Android) + ";" // 未インストール時
+                      + "end";
         window.location.href = intentURL;
       }
 
