@@ -3,37 +3,64 @@
 <head>
   <meta charset="utf-8">
   <title>SwitchBot起動</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- スタイル設定 -->
+  <style>
+    html, body {
+      height: 100%;           /* 画面全体を使用 */
+      margin: 0;              /* デフォルト余白を削除 */
+      padding: 0;
+      display: flex;          /* フレックスボックスで中央配置 */
+      justify-content: center; /* 水平方向中央 */
+      align-items: center;    /* 垂直方向中央 */
+      font-family: Arial, sans-serif; /* フォント指定 */
+      text-align: center;     /* テキスト中央揃え */
+      background-color: #f8f8f8; /* 背景色 */
+    }
+    p {
+      font-size: 18px;        /* 文字サイズ */
+      color: #333;            /* 文字色 */
+      line-height: 1.5;       /* 行間 */
+    }
+  </style>
+
+  <!-- JavaScriptでアプリ起動＆ストア誘導 -->
   <script>
     window.onload = function() {
       // ユーザーエージェントを取得
       var ua = navigator.userAgent || navigator.vendor || window.opera;
 
-      // URLを初期化
-      var appURL = "switchbot://"; // 共通でアプリ起動
+      // 共通アプリスキーム
+      var appURL = "switchbot://";
 
-      // iOSの場合はApp Store
+      // iOS App Store URL
       var storeURL_iOS = "https://apps.apple.com/jp/app/switchbot/id1087374761";
 
-      // Androidの場合はGoogle Play
+      // Android Google Play URL
       var storeURL_Android = "https://play.google.com/store/apps/details?id=com.theswitchbot.switchbot";
 
-      // iOS判定
+      // iOS端末判定
       if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
         // まずアプリを起動
         window.location.href = appURL;
-        // 2秒後にアプリがなければApp Store
-        setTimeout(function() {
+
+        // 2秒後にアプリが無ければApp Storeへ誘導
+        setTimeout(function(){
           window.location.href = storeURL_iOS;
         }, 2000);
       }
-      // Android判定
+      // Android端末判定
       else if (/android/i.test(ua)) {
+        // まずアプリを起動
         window.location.href = appURL;
-        setTimeout(function() {
+
+        // 2秒後にアプリが無ければGoogle Playへ誘導
+        setTimeout(function(){
           window.location.href = storeURL_Android;
         }, 2000);
       }
-      // その他（PCなど）
+      // その他（PCやタブレットなど）
       else {
         document.body.innerHTML = "<p>スマートフォンからアクセスしてください。</p>";
       }
@@ -41,7 +68,10 @@
   </script>
 </head>
 <body>
-  <p>SwitchBotアプリを起動しています…</p>
+  <!-- ユーザーへの案内メッセージ -->
+  <p>
+    SwitchBotアプリを起動しました。<br><br>
+    完了したらこのタブを閉じてください。
+  </p>
 </body>
 </html>
-
